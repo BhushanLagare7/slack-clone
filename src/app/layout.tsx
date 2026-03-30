@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 import { ConvexClientProvider } from "@/components/convex-client-provider";
+import { Modals } from "@/components/modals";
+import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
 
@@ -34,7 +36,11 @@ export default function RootLayout({
         lang="en"
       >
         <body>
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ConvexClientProvider>
+            <Toaster />
+            <Modals />
+            {children}
+          </ConvexClientProvider>
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>
