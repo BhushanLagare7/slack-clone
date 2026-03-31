@@ -1,10 +1,5 @@
-interface WorkspaceIdPageProps {
-  params: Promise<{ workspaceId: string }>;
-}
-
-const WorkspaceIdPage = async ({ params }: WorkspaceIdPageProps) => {
-  const { workspaceId } = await params;
-  return <div>WorkspaceIdPage {workspaceId}</div>;
+const WorkspaceIdPage = () => {
+  return <div>Workspace ID Page</div>;
 };
 
 export default WorkspaceIdPage;
