@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -38,8 +40,12 @@ export const CreateChannelModal = () => {
       { name, workspaceId },
       {
         onSuccess: () => {
+          toast.success("Channel created successfully");
           // TODO: Redirect to the new channel
           handleClose();
+        },
+        onError() {
+          toast.error("Failed to create channel");
         },
       },
     );
