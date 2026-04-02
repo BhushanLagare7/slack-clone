@@ -38,6 +38,11 @@ export const create = mutation({
       role: "admin",
     });
 
+    await ctx.db.insert("channels", {
+      name: "general",
+      workspaceId,
+    });
+
     return workspaceId;
   },
 });
@@ -117,10 +122,6 @@ export const update = mutation({
       )
       .unique();
 
-    if (!member) {
-      throw new Error("Unauthorized");
-    }
-
     if (!member || member.role !== "admin") {
       throw new Error("Unauthorized");
     }
@@ -149,10 +150,6 @@ export const remove = mutation({
         q.eq("workspaceId", args.id).eq("userId", userId),
       )
       .unique();
-
-    if (!member) {
-      throw new Error("Unauthorized");
-    }
 
     if (!member || member.role !== "admin") {
       throw new Error("Unauthorized");
