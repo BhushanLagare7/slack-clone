@@ -1,0 +1,225 @@
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { MdSend } from "react-icons/md";
+import { PiTextAa } from "react-icons/pi";
+
+import { ImageIcon, SmileIcon } from "lucide-react";
+import Quill, { type QuillOptions } from "quill";
+import type { Delta, Op } from "quill/core";
+
+import { cn } from "@/lib/utils";
+
+import { Button } from "./ui/button";
+import { Hint } from "./hint";
+
+import "quill/dist/quill.snow.css";
+
+type EditorValue = {
+  image: File | null;
+  body: string;
+};
+
+interface EditorProps {
+  onSubmit: ({ image, body }: EditorValue) => void;
+  onCancel?: () => void;
+  placeholder?: string;
+  defaultValue?: Delta | Op[];
+  disabled?: boolean;
+  innerRef?: RefObject<Quill | null>;
+  variant?: "create" | "update";
+}
+
+const Editor = ({
+  variant = "create",
+  onSubmit,
+  onCancel,
+  placeholder = "Write something...",
+  defaultValue = [],
+  disabled = false,
+  innerRef,
+}: EditorProps) => {
+  const [text, setText] = useState("");
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+
+  const submitRef = useRef(onSubmit);
+  const placeholderRef = useRef(placeholder);
+  const quillRef = useRef<Quill | null>(null);
+  const defaultValueRef = useRef(defaultValue);
+  const disabledRef = useRef(disabled);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    submitRef.current = onSubmit;
+    placeholderRef.current = placeholder;
+    defaultValueRef.current = defaultValue;
+    disabledRef.current = disabled;
+  });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const editorContainer = container.appendChild(
+      container.ownerDocument.createElement("div"),
+    );
+
+    const options: QuillOptions = {
+      theme: "snow",
+      placeholder: placeholderRef.current,
+      modules: {
+        toolbar: [
+          ["bold", "italic", "strike"],
+          ["link"],
+          [{ list: "ordered" }, { list: "bullet" }],
+        ],
+        keyboard: {
+          bindings: {
+            enter: {
+              key: "Enter",
+              handler: () => {
+                // TODO: Submit the form
+                return;
+              },
+            },
+            shift_enter: {
+              key: "Enter",
+              shiftKey: true,
+              handler: () => {
+                quill.insertText(quill.getSelection()?.index || 0, "\n");
+                return;
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const quill = new Quill(editorContainer, options);
+    quillRef.current = quill;
+    quillRef.current.focus();
+
+    if (innerRef) {
+      innerRef.current = quill;
+    }
+
+    quill.setContents(defaultValueRef.current);
+    setText(quill.getText());
+
+    quill.on(Quill.events.TEXT_CHANGE, () => {
+      setText(quill.getText());
+    });
+
+    return () => {
+      quill.off(Quill.events.TEXT_CHANGE);
+      if (container) {
+        container.innerHTML = "";
+      }
+      if (quillRef.current) {
+        quillRef.current = null;
+      }
+      if (innerRef) {
+        innerRef.current = null;
+      }
+    };
+  }, [innerRef]);
+
+  const toggleToolbar = () => {
+    setIsToolbarVisible((prev) => !prev);
+    const toolbarElement = containerRef.current?.querySelector(".ql-toolbar");
+
+    if (toolbarElement) {
+      toolbarElement.classList.toggle("hidden");
+    }
+  };
+
+  // Regex to remove all HTML tags
+  const isEmpty = text.trim().replace(/<(.|\n)*?>/g, "").length === 0;
+
+  return (
+    <div className="flex flex-col">
+      <div className="flex overflow-hidden flex-col bg-white rounded-md border transition border-slate-200 focus-within:border-slate-300 focus-within:shadow-sm">
+        <div ref={containerRef} className="h-full ql-custom" />
+        <div className="flex px-2 pb-2 z-5">
+          <Hint
+            label={isToolbarVisible ? "Hide formatting" : "Show formatting"}
+          >
+            <Button
+              disabled={disabled}
+              size="icon-sm"
+              variant="ghost"
+              onClick={toggleToolbar}
+            >
+              <PiTextAa className="size-4" />
+            </Button>
+          </Hint>
+          <Hint label="Emoji">
+            <Button
+              disabled={disabled}
+              size="icon-sm"
+              variant="ghost"
+              onClick={() => {}}
+            >
+              <SmileIcon className="size-4" />
+            </Button>
+          </Hint>
+          {variant === "create" && (
+            <Hint label="Image">
+              <Button
+                disabled={disabled}
+                size="icon-sm"
+                variant="ghost"
+                onClick={() => {}}
+              >
+                <ImageIcon className="size-4" />
+              </Button>
+            </Hint>
+          )}
+          {variant === "update" && (
+            <div className="flex gap-x-2 items-center ml-auto">
+              <Button
+                disabled={disabled}
+                size="sm"
+                variant="outline"
+                onClick={() => onCancel?.()}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-[#007A5A] hover:bg-[#007A5A]/80 text-white"
+                disabled={disabled || isEmpty}
+                size="sm"
+                variant="default"
+                onClick={() => {}}
+              >
+                Save
+              </Button>
+            </div>
+          )}
+          {variant === "create" && (
+            <Hint label="Send">
+              <Button
+                className={cn(
+                  "ml-auto",
+                  isEmpty
+                    ? "bg-white hover:bg-white text-muted-foreground"
+                    : "bg-[#007A5A] hover:bg-[#007A5A]/80 text-white",
+                )}
+                disabled={disabled || isEmpty}
+                size="icon-sm"
+                onClick={() => {}}
+              >
+                <MdSend className="size-4" />
+              </Button>
+            </Hint>
+          )}
+        </div>
+      </div>
+      <div className="p-2 text-[10px] text-muted-foreground flex justify-end">
+        <p>
+          <strong>Shift + Return</strong> to add a new line
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Editor;
