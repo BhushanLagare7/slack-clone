@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
-import Quill from "quill";
+import type Quill from "quill";
 import { toast } from "sonner";
 
 import { useCreateMessage } from "@/features/messages/api/use-create-message";

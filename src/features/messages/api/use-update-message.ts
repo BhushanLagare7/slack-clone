@@ -6,12 +6,8 @@ import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 
 type RequestType = {
+  id: Id<"messages">;
   body: string;
-  workspaceId: Id<"workspaces">;
-  image?: Id<"_storage">;
-  channelId?: Id<"channels">;
-  conversationId?: Id<"conversations">;
-  parentMessageId?: Id<"messages">;
 };
 type ResponseType = Id<"messages"> | null;
 
@@ -22,7 +18,7 @@ type Options = {
   throwError?: boolean;
 };
 
-export function useCreateMessage() {
+export function useUpdateMessage() {
   const [data, setData] = useState<ResponseType>(null);
   const [error, setError] = useState<Error | null>(null);
   const [status, setStatus] = useState<
@@ -34,7 +30,7 @@ export function useCreateMessage() {
   const isError = useMemo(() => status === "error", [status]);
   const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.messages.create);
+  const mutation = useMutation(api.messages.update);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {
