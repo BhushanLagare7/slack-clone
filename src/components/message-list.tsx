@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import { LoaderIcon } from "lucide-react";
 
 import { useCurrentMember } from "@/features/members/api/use-current-members";
 import { GetMessagesReturnType } from "@/features/messages/api/use-get-messages";
@@ -49,6 +50,7 @@ export const MessageList = ({
   const workspaceId = useWorkspaceId();
   const { data: currentMember } = useCurrentMember({ workspaceId });
 
+  // Group messages by date
   const groupedMessages = data?.reduce(
     (groups, message) => {
       const date = new Date(message._creationTime);
@@ -110,6 +112,32 @@ export const MessageList = ({
           })}
         </div>
       ))}
+      <div
+        ref={(el) => {
+          if (el) {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting && canLoadMore) {
+                  loadMore();
+                }
+              },
+              { threshold: 1.0 },
+            );
+
+            observer.observe(el);
+            return () => observer.disconnect();
+          }
+        }}
+        className="h-1"
+      />
+      {isLoadingMore && (
+        <div className="relative my-2 text-center">
+          <hr className="absolute right-0 left-0 top-1/2 border-t border-gray-300" />
+          <span className="inline-block relative px-4 py-1 text-xs bg-white rounded-full border border-gray-300 shadow-sm">
+            <LoaderIcon className="size-4 animate-spin" />
+          </span>
+        </div>
+      )}
       {variant === "channel" && channelName && channelCreationTime && (
         <ChannelHero creationTime={channelCreationTime} name={channelName} />
       )}
