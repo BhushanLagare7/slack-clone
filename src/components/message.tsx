@@ -72,7 +72,7 @@ export const Message = ({
   threadTimestamp,
   updatedAt,
 }: MessageProps) => {
-  const { parentMessageId, openMessage, closeMessage } = usePanel();
+  const { parentMessageId, openMessage, openProfile, onClose } = usePanel();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Delete message",
@@ -86,7 +86,8 @@ export const Message = ({
   const { mutate: toggleReaction, isPending: isTogglingReaction } =
     useToggleReaction();
 
-  const isPending = isUpdatingMessage;
+  const isPending =
+    isUpdatingMessage || isRemovingMessage || isTogglingReaction;
 
   const handleReaction = (value: string) => {
     toggleReaction(
@@ -111,7 +112,7 @@ export const Message = ({
           toast.success("Message deleted successfully");
 
           if (parentMessageId === id) {
-            closeMessage();
+            onClose();
           }
         },
         onError: () => {
@@ -214,7 +215,7 @@ export const Message = ({
         )}
       >
         <div className="flex gap-2 items-start">
-          <button>
+          <button onClick={() => openProfile(memberId)}>
             <Avatar size="lg">
               <AvatarImage src={authorImage} />
               <AvatarFallback>{avatarFallback}</AvatarFallback>
@@ -235,7 +236,7 @@ export const Message = ({
               <div className="text-sm">
                 <button
                   className="font-bold text-primary hover:underline"
-                  onClick={() => {}}
+                  onClick={() => openProfile(memberId)}
                 >
                   {authorName}
                 </button>
