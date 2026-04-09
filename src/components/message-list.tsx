@@ -10,6 +10,7 @@ import { useWorkspaceId } from "@/hooks/use-workspace-id";
 import { Id } from "../../convex/_generated/dataModel";
 
 import { ChannelHero } from "./channel-hero";
+import { ConversationHero } from "./conversation-hero";
 import { Message } from "./message";
 
 const TIME_THRESHOLD = 5; // minutes
@@ -105,6 +106,7 @@ export const MessageList = ({
                 setIsEditing={setEditingId}
                 threadCount={message.threadCount}
                 threadImage={message.threadImage}
+                threadName={message.threadName}
                 threadTimestamp={message.threadTimestamp}
                 updatedAt={message.updatedAt}
               />
@@ -134,12 +136,15 @@ export const MessageList = ({
         <div className="relative my-2 text-center">
           <hr className="absolute right-0 left-0 top-1/2 border-t border-gray-300" />
           <span className="inline-block relative px-4 py-1 text-xs bg-white rounded-full border border-gray-300 shadow-sm">
-            <LoaderIcon className="size-4 animate-spin" />
+            <LoaderIcon className="animate-spin size-4" />
           </span>
         </div>
       )}
       {variant === "channel" && channelName && channelCreationTime && (
         <ChannelHero creationTime={channelCreationTime} name={channelName} />
+      )}
+      {variant === "conversation" && (
+        <ConversationHero image={memberImage} name={memberName} />
       )}
     </div>
   );

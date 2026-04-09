@@ -15,6 +15,7 @@ import { Doc, Id } from "../../convex/_generated/dataModel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Hint } from "./hint";
 import { Reactions } from "./reactions";
+import { ThreadBar } from "./thread-bar";
 import { Thumbnail } from "./thumbnail";
 import { Toolbar } from "./toolbar";
 
@@ -46,6 +47,7 @@ interface MessageProps {
   setIsEditing: (id: Id<"messages"> | null) => void;
   threadCount?: number;
   threadImage?: string;
+  threadName?: string;
   threadTimestamp?: number;
   updatedAt: Doc<"messages">["updatedAt"];
 }
@@ -66,6 +68,7 @@ export const Message = ({
   setIsEditing,
   threadCount,
   threadImage,
+  threadName,
   threadTimestamp,
   updatedAt,
 }: MessageProps) => {
@@ -173,6 +176,13 @@ export const Message = ({
                   </span>
                 )}
                 <Reactions data={reactions} onChange={handleReaction} />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  name={threadName}
+                  timestamp={threadTimestamp}
+                  onClick={() => openMessage(id)}
+                />
               </div>
             )}
           </div>
@@ -242,6 +252,13 @@ export const Message = ({
                 <span className="text-xs text-muted-foreground">(edited)</span>
               )}
               <Reactions data={reactions} onChange={handleReaction} />
+              <ThreadBar
+                count={threadCount}
+                image={threadImage}
+                name={threadName}
+                timestamp={threadTimestamp}
+                onClick={() => openMessage(id)}
+              />
             </div>
           )}
         </div>

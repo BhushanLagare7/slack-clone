@@ -219,6 +219,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
                   setIsEditing={setEditingId}
                   threadCount={message.threadCount}
                   threadImage={message.threadImage}
+                  threadName={message.threadName}
                   threadTimestamp={message.threadTimestamp}
                   updatedAt={message.updatedAt}
                 />
@@ -248,7 +249,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
           <div className="relative my-2 text-center">
             <hr className="absolute right-0 left-0 top-1/2 border-t border-gray-300" />
             <span className="inline-block relative px-4 py-1 text-xs bg-white rounded-full border border-gray-300 shadow-sm">
-              <LoaderIcon className="size-4 animate-spin" />
+              <LoaderIcon className="animate-spin size-4" />
             </span>
           </div>
         )}
