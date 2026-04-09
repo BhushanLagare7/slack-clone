@@ -10,6 +10,41 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+/**
+ * Hook for displaying confirmation dialogs.
+ *
+ * This hook provides a reusable way to show confirmation dialogs throughout the application.
+ * It manages the dialog's open state and returns a promise that resolves based on user interaction.
+ *
+ * @param {string} title - The title to display in the dialog header
+ * @param {string} message - The message to display in the dialog body
+ *
+ * @returns {[() => JSX.Element, () => Promise<unknown>]}
+ *          A tuple containing:
+ *          1. The confirmation dialog component to render
+ *          2. A function to trigger the confirmation dialog
+ *
+ * @example
+ * const [ConfirmDialog, confirm] = useConfirm(
+ *   "Delete Workspace",
+ *   "Are you sure you want to delete this workspace?"
+ * );
+ *
+ * // In your component:
+ * const handleDelete = async () => {
+ *   const ok = await confirm();
+ *   if (ok) {
+ *     // User confirmed, proceed with deletion
+ *   }
+ * };
+ *
+ * return (
+ *   <>
+ *     <Button onClick={handleDelete}>Delete</Button>
+ *     <ConfirmDialog />
+ *   </>
+ * );
+ */
 export const useConfirm = (
   title: string,
   message: string,
