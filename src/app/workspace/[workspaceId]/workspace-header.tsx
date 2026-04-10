@@ -88,12 +88,12 @@ export const WorkspaceHeader = ({
         </DropdownMenu>
         <div className="flex items-center gap-0.5">
           <Hint align="center" label="Filter conversations" side="bottom">
-            <Button size="icon-sm" variant="transparent" onClick={() => {}}>
+            <Button size="icon-sm" variant="transparent">
               <ListFilterIcon className="size-4" />
             </Button>
           </Hint>
           <Hint align="center" label="New message" side="bottom">
-            <Button size="icon-sm" variant="transparent" onClick={() => {}}>
+            <Button size="icon-sm" variant="transparent">
               <SquarePenIcon className="size-4" />
             </Button>
           </Hint>
