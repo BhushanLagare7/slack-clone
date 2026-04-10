@@ -293,6 +293,7 @@ export const getById = query({
 
     // Remove the raw `memberId` field since memberIds array is now used instead
     const reactionsWithoutMemberIdProperty = dedupedReactions.map(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ({ memberId, ...rest }) => rest,
     );
 
@@ -429,6 +430,7 @@ export const get = query({
 
         // Remove the raw `memberId` field since memberIds array is now used instead
         const reactionsWithoutMemberIdProperty = dedupedReactions.map(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ({ memberId, ...rest }) => rest,
         );
 
