@@ -3,7 +3,8 @@
 import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
-import { UserButton } from "@/features/auth/components/user-button";
+import { LoaderIcon } from "lucide-react";
+
 import { useGetWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { useCreateWorkspaceModal } from "@/features/workspaces/store/use-create-workspace-modal";
 
@@ -31,9 +32,17 @@ export default function Home() {
     router,
   ]);
 
+  const isRedirecting = !!workspaceId;
+  const isResolvingWorkspace = isLoading || isRedirecting;
+
+  if (!isResolvingWorkspace) {
+    return null;
+  }
+
   return (
-    <div>
-      <UserButton />
+    <div className="h-full flex items-center justify-center" role="status">
+      <span className="sr-only">Loading...</span>
+      <LoaderIcon aria-hidden="true" className="animate-spin size-6 text-muted-foreground" />
     </div>
   );
 }
