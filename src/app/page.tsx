@@ -32,9 +32,17 @@ export default function Home() {
     router,
   ]);
 
+  const isRedirecting = !!workspaceId;
+  const isResolvingWorkspace = isLoading || isRedirecting;
+
+  if (!isResolvingWorkspace) {
+    return null;
+  }
+
   return (
-    <div className="h-full flex items-center justify-center">
-      <LoaderIcon className="animate-spin size-6 text-muted-foreground" />
+    <div className="h-full flex items-center justify-center" role="status">
+      <span className="sr-only">Loading...</span>
+      <LoaderIcon aria-hidden="true" className="animate-spin size-6 text-muted-foreground" />
     </div>
   );
 }

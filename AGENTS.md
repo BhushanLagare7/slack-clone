@@ -69,7 +69,30 @@ The application relies on the Next.js App Router for frontend routing and SSR, w
 
 ## Testing Strategy
 
-> TODO: Configure and document testing frameworks (e.g., Playwright for E2E, Vitest/Jest for unit tests). Currently, local testing relies on manual verification against the Next.js and Convex dev servers.
+To ensure code stability, run both our unit and End-to-End (E2E) suites locally before pushing. (Note: Originally marked as "TODO: Configure and document testing frameworks (e.g., Playwright for E2E, Vitest/Jest for unit tests)", these are the current runnable steps to follow once tools are set up.)
+
+### Running Tests Locally
+
+1. **Unit Tests (Vitest)**
+   Ensure `vitest.config.ts` is configured. Run unit tests to verify components and isolated logic natively:
+   ```bash
+   npm run test:unit
+   ```
+   *Target: `src/**/*.test.ts` and `src/**/*.test.tsx`*
+
+2. **E2E Tests (Playwright)**
+   Ensure `playwright.config.ts` incorporates local development URLs. Spin up both Next.js and Convex servers locally, then run Playwright:
+   ```bash
+   # Terminal 1 - start Next app
+   npm run dev
+
+   # Terminal 2 - start Convex
+   npx convex dev
+
+   # Terminal 3 - run tests
+   npm run test:e2e
+   ```
+   *Target: tests in `tests/` or `e2e/` folder*
 
 ## Security & Compliance
 
@@ -77,12 +100,17 @@ The application relies on the Next.js App Router for frontend routing and SSR, w
 * **Access Control**: Handled systematically via Convex mutations validating session tokens and user roles before continuing database interaction.
 * **License**: Released and maintained under the MIT License.
 
-## Agent Guardrails
+## Agent Responsibilities
 
 * Never alter the core `convex/schema.ts` without explicit user review and approval.
 * Do not commit secrets, environment variables, or generated credential sets.
 * Keep architecture scope strictly mapped to specific directories (`src/features/` or `src/components/`) to maintain feature-sliced boundaries.
 * Ensure `npx tsc --noEmit` and `npm run lint` both pass cleanly before suggesting a feature is complete.
+
+## Agent Capabilities
+
+* **Allowed Actions**: Can suggest code changes, create pull requests, run tests locally or via CI, and read all repository files.
+* **Prohibited Actions**: Cannot merge pull requests, cannot exfiltrate secrets, and cannot change the core schema without explicit user approval.
 
 ## Extensibility Hooks
 

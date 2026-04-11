@@ -64,7 +64,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 We want to make your experience with this project as smooth as possible! Here are the best ways to get support:
 
-- **Issues**: If you encounter a bug or have a feature request, please [open an issue](../../issues).
+- **Issues**: If you encounter a bug or have a feature request, please [open an issue](https://github.com/BhushanLagare7/slack-clone/issues).
 - **Core Technologies Documentation**:
   - [Next.js Documentation](https://nextjs.org/docs)
   - [Convex Documentation](https://docs.convex.dev/home)
